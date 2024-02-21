@@ -2,6 +2,7 @@
 	"name": "node-pokemon-api",
 	"version": "1.0.0",
 	"description": "An API REST to handle some pokemons",
+	"type": "module",
 	"main": "app.js",
 	"scripts": {
 		"start": "node app.js",
@@ -9,5 +10,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Cycle9898",
-	"license": "ISC"
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2"
+	}
 }
