@@ -1,14 +1,13 @@
 import express from "express";
+import morgan from "morgan";
+import favicon from "serve-favicon";
 import { success } from "./utils/helper.js";
 import { pokemons } from "./mocked_data/mock-pokemon.js";
 
 const app = express();
 const port = 3000;
 
-app.use((req, res, next) => {
-	console.log(`URL : ${req.url}`);
-	next();
-});
+app.use(favicon("./assets/favicon.ico")).use(morgan("dev"));
 
 app.get("/", (req, res) => res.send("Pokemons API is up and running !"));
 
