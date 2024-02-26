@@ -41,8 +41,16 @@ app.put("/api/pokemons/:id", (req, res) => {
 	pokemonsArray = pokemonsArray.map(pokemon =>
 		pokemon.id === id ? pokemonUpdated : pokemon
 	);
-	const message = `Le Pokémon ${pokemonUpdated.name} a bien été modifié.`;
+	const message = `Le Pokémon ${pokemonUpdated?.name} a bien été modifié.`;
 	res.json(success(message, pokemonUpdated));
+});
+
+app.delete("/api/pokemons/:id", (req, res) => {
+	const id = parseInt(req.params.id);
+	const pokemonDeleted = pokemonsArray.find(pokemon => pokemon.id === id);
+	pokemonsArray = pokemonsArray.filter(pokemon => pokemon.id !== id);
+	const message = `Le Pokémon ${pokemonDeleted?.name} a bien été supprimé.`;
+	res.json(success(message, pokemonDeleted));
 });
 
 app.listen(port, () =>
