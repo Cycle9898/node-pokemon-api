@@ -40,14 +40,15 @@ const Pokemon = pokemonModel(sequelize, DataTypes);
 sequelize.sync({ force: true }).then(_ => {
 	console.log("Pokedex database has been correctly synchronized");
 
-	Pokemon.create({
-		name: "Bulbizarre",
-		hp: 25,
-		cp: 5,
-		picture:
-			"https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png",
-		types: ["Plante", "Poison"].join()
-	}).then(bulbizarre => console.log(bulbizarre.toJSON()));
+	pokemonsArray.map(pokemon => {
+		Pokemon.create({
+			name: pokemon.name,
+			hp: pokemon.hp,
+			cp: pokemon.cp,
+			picture: pokemon.picture,
+			types: pokemon.types.join()
+		}).then(pokemon => console.log(pokemon.toJSON()));
+	});
 });
 
 app.use(favicon("./assets/favicon.ico")).use(morgan("dev")).use(express.json());
