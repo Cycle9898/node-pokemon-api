@@ -1,13 +1,38 @@
 import express from "express";
 import morgan from "morgan";
 import favicon from "serve-favicon";
+import { Sequelize } from "sequelize";
 import { getUniqueId, success } from "./utils/helper.js";
 import { pokemons } from "./mocked_data/mock-pokemon.js";
+
+let pokemonsArray = [...pokemons];
 
 const app = express();
 const port = 3000;
 
-let pokemonsArray = [...pokemons];
+const sequelize = new Sequelize(
+	"pokedex",
+	"root",
+	"",
+
+	{
+		host: "localhost",
+		dialect: "mariadb",
+		dialectOptions: {
+			timezone: "Etc/GMT-2"
+		},
+		logging: false
+	}
+);
+
+sequelize
+	.authenticate()
+	.then(_ =>
+		console.log("Database connection has been successfully established.")
+	)
+	.catch(error =>
+		console.log(`Unable to connect to the database : ${error}`)
+	);
 
 app.use(favicon("./assets/favicon.ico")).use(morgan("dev")).use(express.json());
 
