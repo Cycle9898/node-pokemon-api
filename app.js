@@ -1,10 +1,10 @@
 import express from "express";
 import morgan from "morgan";
 import favicon from "serve-favicon";
-import { getUniqueId, success } from "./src/utils/helper.js";
 import { initDb, testDatabaseConnection } from "./src/database/sequelize.js";
+import { pokemonRouter } from "./src/Routes/pokemonsRoutes.js";
+import { getUniqueId, success } from "./src/utils/helper.js";
 import { pokemons } from "./src/database/mocked_data/mock-pokemon.js";
-import router from "./src/Routes/pokemonsRoutes.js";
 
 // copy of Pokemon mocked data (will be deleted with real endpoints)
 let pokemonsArray = [...pokemons];
@@ -24,13 +24,9 @@ initDb();
 
 // Router
 app.get("/", (req, res) => res.send("Pokemons API is up and running !"));
+app.use("/api/pokemons", pokemonRouter);
 
 // test endpoints (will be deleted)
-app.get("/api/pokemons", (req, res) => {
-	const message = `La liste des ${pokemonsArray.length} Pokémons a bien été récupérée.`;
-
-	res.json(success(message, pokemonsArray));
-});
 
 app.post("/api/pokemons", (req, res) => {
 	const id = getUniqueId(pokemonsArray);
