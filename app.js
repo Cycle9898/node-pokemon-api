@@ -1,60 +1,31 @@
 import express from "express";
 import morgan from "morgan";
 import favicon from "serve-favicon";
-import { Sequelize, DataTypes } from "sequelize";
-import { getUniqueId, success } from "./utils/helper.js";
-import { pokemons } from "./mocked_data/mock-pokemon.js";
-import { pokemonModel } from "./src/database/models/pokemon.js";
+import { getUniqueId, success } from "./src/utils/helper.js";
+import { initDb, testDatabaseConnection } from "./src/database/sequelize.js";
+import { pokemons } from "./src/database/mocked_data/mock-pokemon.js";
+import router from "./src/Routes/pokemonsRoutes.js";
 
+// copy of Pokemon mocked data (will be deleted with real endpoints)
 let pokemonsArray = [...pokemons];
 
+// Express app
 const app = express();
 const port = 3000;
 
-const sequelize = new Sequelize(
-	"pokedex",
-	"root",
-	"",
+// Middlewares
+app.use(favicon("./src/assets/favicon.ico"))
+	.use(morgan("dev"))
+	.use(express.json());
 
-	{
-		host: "localhost",
-		dialect: "mariadb",
-		dialectOptions: {
-			timezone: "Etc/GMT-2"
-		},
-		logging: false
-	}
-);
+// MariaDB database interaction(s)
+testDatabaseConnection();
+initDb();
 
-sequelize
-	.authenticate()
-	.then(_ =>
-		console.log("Database connection has been successfully established.")
-	)
-	.catch(error =>
-		console.log(`Unable to connect to the database : ${error}`)
-	);
-
-const Pokemon = pokemonModel(sequelize, DataTypes);
-
-sequelize.sync({ force: true }).then(_ => {
-	console.log("Pokedex database has been correctly synchronized");
-
-	pokemonsArray.map(pokemon => {
-		Pokemon.create({
-			name: pokemon.name,
-			hp: pokemon.hp,
-			cp: pokemon.cp,
-			picture: pokemon.picture,
-			types: pokemon.types.join()
-		}).then(pokemon => console.log(pokemon.toJSON()));
-	});
-});
-
-app.use(favicon("./assets/favicon.ico")).use(morgan("dev")).use(express.json());
-
+// Router
 app.get("/", (req, res) => res.send("Pokemons API is up and running !"));
 
+// test endpoints (will be deleted)
 app.get("/api/pokemons", (req, res) => {
 	const message = `La liste des ${pokemonsArray.length} Pokémons a bien été récupérée.`;
 
@@ -95,6 +66,7 @@ app.delete("/api/pokemons/:id", (req, res) => {
 	res.json(success(message, pokemonDeleted));
 });
 
+// Listening
 app.listen(port, () =>
 	console.log(`The app is running on : http://localhost:${port}`)
 );
