@@ -1,9 +1,10 @@
 import express from "express";
 import morgan from "morgan";
 import favicon from "serve-favicon";
-import { Sequelize } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize";
 import { getUniqueId, success } from "./utils/helper.js";
 import { pokemons } from "./mocked_data/mock-pokemon.js";
+import { pokemonModel } from "./src/database/models/pokemon.js";
 
 let pokemonsArray = [...pokemons];
 
@@ -33,6 +34,12 @@ sequelize
 	.catch(error =>
 		console.log(`Unable to connect to the database : ${error}`)
 	);
+
+const Pokemon = pokemonModel(sequelize, DataTypes);
+
+sequelize
+	.sync({ force: true })
+	.then(_ => console.log("Pokedex database has been correctly synchronized"));
 
 app.use(favicon("./assets/favicon.ico")).use(morgan("dev")).use(express.json());
 
