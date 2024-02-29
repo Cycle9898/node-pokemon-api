@@ -12,3 +12,5 @@ pokemonRouter.get("/:id", pokemonsControllers.getPokemon);
 pokemonRouter.post("/", pokemonsControllers.addPokemon);
 
 pokemonRouter.put("/:id", pokemonsControllers.updatePokemon);
+
+pokemonRouter.delete("/:id", pokemonsControllers.deletePokemon);

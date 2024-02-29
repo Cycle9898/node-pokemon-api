@@ -26,16 +26,6 @@ initDb();
 app.get("/", (req, res) => res.send("Pokemons API is up and running !"));
 app.use("/api/pokemons", pokemonRouter);
 
-// test endpoints (will be deleted)
-
-app.delete("/api/pokemons/:id", (req, res) => {
-	const id = parseInt(req.params.id);
-	const pokemonDeleted = pokemonsArray.find(pokemon => pokemon.id === id);
-	pokemonsArray = pokemonsArray.filter(pokemon => pokemon.id !== id);
-	const message = `Le Pokémon ${pokemonDeleted?.name} a bien été supprimé.`;
-	res.json(success(message, pokemonDeleted));
-});
-
 // Listening
 app.listen(port, () =>
 	console.log(`The app is running on : http://localhost:${port}`)
