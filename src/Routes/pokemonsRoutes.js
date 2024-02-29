@@ -8,3 +8,5 @@ export const pokemonRouter = express.Router();
 pokemonRouter.get("/", pokemonsControllers.getAllPokemons);
 
 pokemonRouter.get("/:id", pokemonsControllers.getPokemon);
+
+pokemonRouter.post("/", pokemonsControllers.addPokemon);

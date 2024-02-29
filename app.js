@@ -28,14 +28,6 @@ app.use("/api/pokemons", pokemonRouter);
 
 // test endpoints (will be deleted)
 
-app.post("/api/pokemons", (req, res) => {
-	const id = getUniqueId(pokemonsArray);
-	const pokemonCreated = { ...req.body, ...{ id, created: new Date() } };
-	pokemonsArray.push(pokemonCreated);
-	const message = `Le Pokémon ${pokemonCreated?.name} a bien été créé.`;
-	res.json(success(message, pokemonCreated));
-});
-
 app.put("/api/pokemons/:id", (req, res) => {
 	const id = parseInt(req.params.id);
 	const pokemonUpdated = { ...req.body, id };
