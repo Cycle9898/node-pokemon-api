@@ -36,14 +36,6 @@ app.post("/api/pokemons", (req, res) => {
 	res.json(success(message, pokemonCreated));
 });
 
-app.get("/api/pokemons/:id", (req, res) => {
-	const id = parseInt(req.params.id);
-	const chosenPokemon = pokemonsArray.find(pokemon => pokemon.id === id);
-	const message = "Un Pokémon a bien été trouvé";
-
-	res.json(success(message, chosenPokemon));
-});
-
 app.put("/api/pokemons/:id", (req, res) => {
 	const id = parseInt(req.params.id);
 	const pokemonUpdated = { ...req.body, id };

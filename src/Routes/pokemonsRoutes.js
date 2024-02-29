@@ -6,3 +6,5 @@ export const pokemonRouter = express.Router();
 
 // Endpoints
 pokemonRouter.get("/", pokemonsControllers.getAllPokemons);
+
+pokemonRouter.get("/:id", pokemonsControllers.getPokemon);
