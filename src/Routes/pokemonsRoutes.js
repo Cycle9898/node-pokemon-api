@@ -10,3 +10,5 @@ pokemonRouter.get("/", pokemonsControllers.getAllPokemons);
 pokemonRouter.get("/:id", pokemonsControllers.getPokemon);
 
 pokemonRouter.post("/", pokemonsControllers.addPokemon);
+
+pokemonRouter.put("/:id", pokemonsControllers.updatePokemon);
