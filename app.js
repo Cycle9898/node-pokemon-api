@@ -20,6 +20,12 @@ initDb();
 // Router
 app.get("/", (req, res) => res.send("Pokemons API is up and running !"));
 app.use("/api/pokemons", pokemonRouter);
+//handling bad URL's
+app.use(({ res }) => {
+	const message =
+		"Impossible de trouver la ressource demandée ! Merci de vérifier l'URL.";
+	res.status(404).json({ message });
+});
 
 // Listening
 app.listen(port, () =>
