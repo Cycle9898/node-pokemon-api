@@ -86,7 +86,7 @@ export const pokemons = [
 		cp: 7,
 		picture:
 			"https://assets.pokemon.com/assets/cms2/img/pokedex/detail/025.png",
-		types: ["Electrik"],
+		types: ["Électrique"],
 		created: new Date()
 	},
 	{

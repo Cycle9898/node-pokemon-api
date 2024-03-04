@@ -1,5 +1,5 @@
 import { Pokemon } from "../database/sequelize.js";
-import { ValidationError } from "sequelize";
+import { ValidationError, UniqueConstraintError } from "sequelize";
 
 export const getAllPokemons = (req, res) => {
 	Pokemon.findAll().then(pokemons => {
@@ -38,7 +38,10 @@ export const addPokemon = (req, res) => {
 			res.json({ message, data: pokemon });
 		})
 		.catch(error => {
-			if (error instanceof ValidationError) {
+			if (
+				error instanceof ValidationError ||
+				error instanceof UniqueConstraintError
+			) {
 				return res
 					.status(400)
 					.json({ message: error.message, data: error });
@@ -67,7 +70,10 @@ export const updatePokemon = (req, res) => {
 			});
 		})
 		.catch(error => {
-			if (error instanceof ValidationError) {
+			if (
+				error instanceof ValidationError ||
+				error instanceof UniqueConstraintError
+			) {
 				return res
 					.status(400)
 					.json({ message: error.message, data: error });
