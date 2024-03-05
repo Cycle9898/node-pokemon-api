@@ -1,15 +1,30 @@
 import { Pokemon } from "../database/sequelize.js";
-import { ValidationError, UniqueConstraintError } from "sequelize";
+import { ValidationError, UniqueConstraintError, Op } from "sequelize";
 
 export const getAllPokemons = (req, res) => {
-	Pokemon.findAll().then(pokemons => {
-		const message = `La liste des ${pokemons.length} Pokémons a bien été récupérée.`;
-		res.json({ message, data: pokemons }).catch(error => {
-			const message =
-				"La liste des Pokémons n'a pas pu être récupérée. Veuillez réessayer dans quelques instants.";
-			res.status(500).json({ message, data: error });
+	if (req.query.name) {
+		const name = req.query.name;
+		return Pokemon.findAll({
+			where: {
+				name: {
+					[Op.like]: `%${name}%`
+				}
+			},
+			limit: 5
+		}).then(pokemons => {
+			const message = `Il y a ${pokemons.length} pokémon(s) qui correspond(ent) au terme de recherche ${name}.`;
+			res.json({ message, data: pokemons });
 		});
-	});
+	} else {
+		Pokemon.findAll().then(pokemons => {
+			const message = `La liste des ${pokemons.length} Pokémons a bien été récupérée.`;
+			res.json({ message, data: pokemons }).catch(error => {
+				const message =
+					"La liste des Pokémons n'a pas pu être récupérée. Veuillez réessayer dans quelques instants.";
+				res.status(500).json({ message, data: error });
+			});
+		});
+	}
 };
 
 export const getPokemon = (req, res) => {
