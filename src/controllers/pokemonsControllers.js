@@ -2,28 +2,49 @@ import { Pokemon } from "../database/sequelize.js";
 import { ValidationError, UniqueConstraintError, Op } from "sequelize";
 
 export const getAllPokemons = (req, res) => {
+	const limitNb = parseInt(req.query.limit) || null;
+	const options = {
+		order: ["name"],
+		limit: limitNb
+	};
+
 	if (req.query.name) {
 		const name = req.query.name;
-		return Pokemon.findAll({
+
+		if (!req.query.limit) {
+			options.limit = 5;
+		}
+
+		if (name.length < 2) {
+			const message =
+				"Merci d'indiquer au minimum 2 caractères pour le terme de recherche.";
+			return res.status(400).json({ message });
+		}
+
+		return Pokemon.findAndCountAll({
 			where: {
 				name: {
 					[Op.like]: `%${name}%`
 				}
 			},
-			limit: 5
-		}).then(pokemons => {
-			const message = `Il y a ${pokemons.length} pokémon(s) qui correspond(ent) au terme de recherche ${name}.`;
-			res.json({ message, data: pokemons });
+			...options
+		}).then(({ count, rows }) => {
+			const message = `Il y a ${count} pokémon(s) qui correspond(ent) au terme de recherche '${name}'. ${
+				count > options.limit ? options.limit : count
+			} résultat(s) transmis.`;
+			res.json({ message, data: rows });
 		});
 	} else {
-		Pokemon.findAll().then(pokemons => {
-			const message = `La liste des ${pokemons.length} Pokémons a bien été récupérée.`;
-			res.json({ message, data: pokemons }).catch(error => {
+		Pokemon.findAll(options)
+			.then(pokemons => {
+				const message = `La liste des ${pokemons.length} Pokémon(s) a bien été récupérée.`;
+				res.json({ message, data: pokemons });
+			})
+			.catch(error => {
 				const message =
 					"La liste des Pokémons n'a pas pu être récupérée. Veuillez réessayer dans quelques instants.";
 				res.status(500).json({ message, data: error });
 			});
-		});
 	}
 };
 
