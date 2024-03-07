@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import favicon from "serve-favicon";
 import { initDb, testDatabaseConnection } from "./src/database/sequelize.js";
+import { userRouter } from "./src/Routes/usersRoutes.js";
 import { pokemonRouter } from "./src/Routes/pokemonsRoutes.js";
 
 // Express app
@@ -19,6 +20,7 @@ initDb();
 
 // Router
 app.get("/", (req, res) => res.send("Pokemons API is up and running !"));
+app.use("/api/auth", userRouter);
 app.use("/api/pokemons", pokemonRouter);
 //handling bad URL's
 app.use(({ res }) => {
