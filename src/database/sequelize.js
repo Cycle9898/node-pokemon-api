@@ -2,6 +2,7 @@ import { Sequelize, DataTypes } from "sequelize";
 import { pokemonModel } from "./models/pokemon.js";
 import { userModel } from "./models/user.js";
 import { pokemons } from "./mocked_data/mock-pokemon.js";
+import bcrypt from "bcrypt";
 
 // Init sequelize
 const sequelize = new Sequelize(
@@ -49,10 +50,12 @@ export const initDb = () => {
 			}).then(pokemon => console.log(pokemon.toJSON()));
 		});
 
-		User.create({
-			username: "test",
-			password: "test"
-		}).then(user => console.log(user.toJSON()));
+		bcrypt.hash("test", 10).then(hash => {
+			User.create({
+				username: "test",
+				password: hash
+			}).then(user => console.log(user.toJSON()));
+		});
 
 		console.log("Pokedex database has been correctly synchronized");
 	});
