@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
 import { pokemonModel } from "./models/pokemon.js";
+import { userModel } from "./models/user.js";
 import { pokemons } from "./mocked_data/mock-pokemon.js";
 
 // Init sequelize
@@ -20,6 +21,7 @@ const sequelize = new Sequelize(
 
 // Models related
 export const Pokemon = pokemonModel(sequelize, DataTypes);
+export const User = userModel(sequelize, DataTypes);
 
 // Database related
 export const testDatabaseConnection = () => {
@@ -46,6 +48,12 @@ export const initDb = () => {
 				types: pokemon.types
 			}).then(pokemon => console.log(pokemon.toJSON()));
 		});
+
+		User.create({
+			username: "test",
+			password: "test"
+		}).then(user => console.log(user.toJSON()));
+
 		console.log("Pokedex database has been correctly synchronized");
 	});
 };
