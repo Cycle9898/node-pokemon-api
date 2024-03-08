@@ -1,5 +1,4 @@
 import express from "express";
-import morgan from "morgan";
 import favicon from "serve-favicon";
 import { initDb, testDatabaseConnection } from "./src/database/sequelize.js";
 import { userRouter } from "./src/Routes/usersRoutes.js";
@@ -8,12 +7,10 @@ import "dotenv/config";
 
 // Express app
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(favicon("./src/assets/favicon.ico"))
-	.use(morgan("dev"))
-	.use(express.json());
+app.use(favicon("./src/assets/favicon.ico")).use(express.json());
 
 // MariaDB database interaction(s)
 testDatabaseConnection();
@@ -31,6 +28,4 @@ app.use(({ res }) => {
 });
 
 // Listening
-app.listen(port, () =>
-	console.log(`The app is running on : http://localhost:${port}`)
-);
+app.listen(port, () => console.log(`The app is running on PORT : ${port}`));

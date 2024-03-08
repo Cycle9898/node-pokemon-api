@@ -5,8 +5,8 @@
 	"type": "module",
 	"main": "app.js",
 	"scripts": {
-		"start": "node app.js",
-		"dev": "node --watch app.js",
+		"start": "NODE_ENV=production node app.js",
+		"dev": "NODE_ENV=development node --watch app.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Cycle9898",
@@ -19,8 +19,5 @@
 		"mariadb": "^3.2.3",
 		"sequelize": "^6.37.1",
 		"serve-favicon": "^2.5.0"
-	},
-	"devDependencies": {
-		"morgan": "^1.10.0"
 	}
 }
