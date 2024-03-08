@@ -4,6 +4,7 @@ import favicon from "serve-favicon";
 import { initDb, testDatabaseConnection } from "./src/database/sequelize.js";
 import { userRouter } from "./src/Routes/usersRoutes.js";
 import { pokemonRouter } from "./src/Routes/pokemonsRoutes.js";
+import "dotenv/config";
 
 // Express app
 const app = express();
