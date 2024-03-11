@@ -4,13 +4,14 @@ import { initDb, testDatabaseConnection } from "./src/database/sequelize.js";
 import { userRouter } from "./src/Routes/usersRoutes.js";
 import { pokemonRouter } from "./src/Routes/pokemonsRoutes.js";
 import "dotenv/config";
+import cors from "cors";
 
 // Express app
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(favicon("./src/assets/favicon.ico")).use(express.json());
+app.use(favicon("./src/assets/favicon.ico")).use(express.json()).use(cors());
 
 // MariaDB database interaction(s)
 testDatabaseConnection();
