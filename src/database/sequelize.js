@@ -6,17 +6,17 @@ import bcrypt from "bcrypt";
 
 // Init sequelize
 const sequelize = new Sequelize(
-	"pokedex",
-	"root",
-	"",
+	process.env.DB_NAME || "pokedex",
+	process.env.DB_USERNAME || "root",
+	process.env.DB_PASSWORD || "",
 
 	{
-		host: "localhost",
-		dialect: "mariadb",
+		host: process.env.DB_HOST || "localhost",
+		dialect: process.env.DB_DIALECT || "mariadb",
 		dialectOptions: {
 			timezone: "Etc/GMT-2"
 		},
-		logging: false
+		logging: process.env.NODE_ENV === "production"
 	}
 );
 
@@ -39,22 +39,29 @@ export const testDatabaseConnection = () => {
 };
 
 export const initDb = () => {
-	return sequelize.sync({ force: true }).then(_ => {
-		pokemons.map(pokemon => {
-			Pokemon.create({
-				name: pokemon.name,
-				hp: pokemon.hp,
-				cp: pokemon.cp,
-				picture: pokemon.picture,
-				types: pokemon.types
-			}).then(pokemon => console.log(pokemon.toJSON()));
+	return sequelize.sync().then(_ => {
+		Pokemon.findAll().then(pokemons => {
+			if (pokemons.length == 0) {
+				pokemons.map(pokemon => {
+					Pokemon.create({
+						name: pokemon.name,
+						hp: pokemon.hp,
+						cp: pokemon.cp,
+						picture: pokemon.picture,
+						types: pokemon.types
+					});
+				});
+			}
 		});
 
-		bcrypt.hash("test", 10).then(hash => {
-			User.create({
-				username: "test",
-				password: hash
-			}).then(user => console.log(user.toJSON()));
+		User.findAll().then(users => {
+			if (users.length == 0) {
+				bcrypt
+					.hash("test", 10)
+					.then(hash =>
+						User.create({ username: "test", password: hash })
+					);
+			}
 		});
 
 		console.log("Pokedex database has been correctly synchronized");
